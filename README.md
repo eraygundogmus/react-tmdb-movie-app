@@ -9,11 +9,7 @@ Auth
 
 Todos:
 
-- [ ] Get Account details
-
-  Write user data on store
-  Render user data
-
+- [*] Get Account details
 - [ ] Get Account favourites etc.
 - [ ] List movies
 - [ ] List TV shows
