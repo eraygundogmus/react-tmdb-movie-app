@@ -5,12 +5,14 @@ export interface AuthState {
   isLoggedIn: boolean;
   token: string;
   sessionId: string;
+  athorizedRequestToken: string;
 }
 
 const initialState: AuthState = {
   isLoggedIn: false,
   token: "",
   sessionId: "",
+  athorizedRequestToken: "",
 };
 
 export const authSlice = createSlice({
@@ -29,9 +31,18 @@ export const authSlice = createSlice({
     setSessionId: (state, action) => {
       state.sessionId = action.payload;
     },
+    setAthorizedRequestToken: (state, action) => {
+      state.athorizedRequestToken = action.payload;
+    },
   },
 });
 
-export const { login, logout, setToken, setSessionId } = authSlice.actions;
+export const {
+  login,
+  logout,
+  setToken,
+  setSessionId,
+  setAthorizedRequestToken,
+} = authSlice.actions;
 
 export default authSlice.reducer;

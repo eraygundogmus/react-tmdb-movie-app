@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { requestToken } from "../services";
+import { requestToken, createNewSession } from "../services";
 import { useSelector, useDispatch } from "react-redux";
 import { REDIRECT_URL, API_KEY } from "../constants";
 import { setToken, login, setSessionId } from "../features/auth";
@@ -12,7 +12,7 @@ function Login() {
   const navigate = useNavigate();
   const [params] = useSearchParams();
 
-  const sessionId = params.get("request_token");
+  const athorizedRequestToken = params.get("request_token");
 
   useEffect(() => {
     if (!auth.token) {
@@ -29,13 +29,28 @@ function Login() {
   }, [auth.token]);
 
   useEffect(() => {
-    if (sessionId) {
-      navigate("/");
-      dispatch(setSessionId(sessionId));
+    if (athorizedRequestToken) {
+      console.log("athorizedRequestToken : _________", athorizedRequestToken);
 
-      dispatch(login());
+      try {
+        createNewSession({
+          apiKey: API_KEY,
+          requestToken: athorizedRequestToken,
+        })
+          .then(async (res) => {
+            const sessionObj = await res.json();
+            const sessionId = sessionObj.session_id;
+            dispatch(setSessionId(sessionId));
+          })
+          .then(() => {
+            dispatch(login());
+            navigate("/");
+          });
+      } catch (error) {
+        console.log(error);
+      }
     }
-  }, [sessionId]);
+  }, [athorizedRequestToken]);
 
   return (
     <div className="m-10 gap-4 flex flex-col items-center">
