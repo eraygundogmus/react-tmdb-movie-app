@@ -5,8 +5,11 @@ import { store } from "store";
 import { QueryClient, QueryClientProvider } from "react-query";
 import RouteProvider from "router";
 import { BrowserRouter as Router } from "react-router-dom";
+import { PersistGate } from "redux-persist/integration/react";
+import { persistStore } from "redux-persist";
 
 const queryClient = new QueryClient();
+let persistor = persistStore(store);
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
@@ -14,9 +17,11 @@ const root = ReactDOM.createRoot(
 root.render(
   <QueryClientProvider client={queryClient}>
     <Provider store={store}>
-      <Router>
-        <RouteProvider />
-      </Router>
+      <PersistGate loading={null} persistor={persistor}>
+        <Router>
+          <RouteProvider />
+        </Router>{" "}
+      </PersistGate>
     </Provider>
   </QueryClientProvider>
 );
