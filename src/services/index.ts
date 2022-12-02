@@ -51,7 +51,7 @@ export function getPopularMovies({
   page: number;
 }) {
   return fetch(
-    `${process.env.REACT_APP_API_URL}/account?api_key=${apiKey}&language=en-US&page={page}`,
+    `${process.env.REACT_APP_API_URL}/movie/popular?api_key=${apiKey}&language=en-US&page=${page}`,
     {
       method: "GET",
     }

@@ -1,13 +1,13 @@
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { useEffect } from "react";
-import { getAccountDetails } from "services";
+import { useEffect, useState } from "react";
+import { getAccountDetails, getPopularMovies } from "services";
 import { API_KEY } from "../constants";
 import { setProfile } from "../features/account";
 
 function Home() {
   const state = useSelector((state: any) => state);
-
+  const [movies, setMovies] = useState([]);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -32,6 +32,14 @@ function Home() {
         };
         dispatch(setProfile(typedProfile));
       });
+
+      getPopularMovies({ apiKey: API_KEY, page: 1 }).then(async (res) => {
+        const response = await res.json();
+        setMovies(response.results);
+      });
+
+      // store' yazdır (persist olmamalı)
+      // bir component ile list render yap
     } catch (error) {
       console.log(error);
     }
@@ -57,6 +65,20 @@ function Home() {
           />
         </div>
       </header>
+
+      <div>
+        {movies.length > 0 &&
+          movies.map((movie: any) => (
+            <div key={movie.id}>
+              <h1> {movie.title} </h1>
+              <p>{movie.overview}</p>
+              <span> {movie.vote_average} </span>
+              <img
+                src={`https://image.tmdb.org/t/p/w500/${movie.backdrop_path}`}
+              />
+            </div>
+          ))}
+      </div>
     </div>
   );
 }
